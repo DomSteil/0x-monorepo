@@ -6,7 +6,9 @@
 import ProviderEngine = require('web3-provider-engine');
 import RpcSubprovider = require('web3-provider-engine/subproviders/rpc');
 
-import { EmptyWalletSubprovider, FakeGasEstimateSubprovider } from '@0xproject/subproviders';
+import { CoverageSubprovider } from '@0xproject/sol-cov';
+import { EmptyWalletSubprovider, FakeGasEstimateSubprovider, GanacheSubprovider } from '@0xproject/subproviders';
+import * as _ from 'lodash';
 
 import { constants } from './constants';
 
@@ -26,15 +28,32 @@ export const web3Factory = {
     },
     getRpcProvider(hasAddresses: boolean = true): Web3.Provider {
         const provider = new ProviderEngine();
+        if (_.isUndefined((global as any).__coverage_subprovider__)) {
+            const artifactsPath = './src/artifacts';
+            const contractsPath = './src/contracts';
+            const networkId = 50;
+            const coverageSubprovider = new CoverageSubprovider(artifactsPath, contractsPath, networkId);
+            (global as any).__coverage_subprovider__ = coverageSubprovider;
+        }
+        provider.addProvider((global as any).__coverage_subprovider__);
         if (!hasAddresses) {
             provider.addProvider(new EmptyWalletSubprovider());
         }
         provider.addProvider(new FakeGasEstimateSubprovider(constants.GAS_ESTIMATE));
         provider.addProvider(
-            new RpcSubprovider({
-                rpcUrl: constants.RPC_URL,
+            new GanacheSubprovider({
+                logger: console,
+                verbose: false,
+                port: 8545,
+                networkId: 50,
+                mnemonic: 'concert load couple harbor equip island argue ramp clarify fence smart topic',
             }),
         );
+        // provider.addProvider(
+        //     new RpcSubprovider({
+        //         rpcUrl: constants.RPC_URL,
+        //     }),
+        // );
         provider.start();
         return provider;
     },

@@ -1,5 +1,7 @@
 declare module 'dirty-chai';
 declare module 'es6-promisify';
+declare module 'solc';
+declare module 'ganache-core';
 
 // tslint:disable:max-classes-per-file
 // tslint:disable:class-name

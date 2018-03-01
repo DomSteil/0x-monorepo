@@ -24,10 +24,14 @@ export interface ContractNetworkData {
     keccak256: string;
     source_tree_hash: string;
     abi: Web3.ContractAbi;
-    unlinked_binary: string;
+    bytecode: string;
+    runtime_bytecode: string;
     address?: string;
     constructor_args?: string;
     updated_at: number;
+    source_map: string;
+    source_map_runtime: string;
+    sources: string[];
 }
 
 export interface SolcErrors {
@@ -54,12 +58,21 @@ export interface CompilerOptions {
     specifiedContracts: Set<string>;
 }
 
-export interface DeployerOptions {
+export interface BaseDeployerOptions {
     artifactsDir: string;
-    jsonrpcPort: number;
     networkId: number;
     defaults: Partial<TxData>;
 }
+
+export interface ProviderDeployerOptions extends BaseDeployerOptions {
+    web3Provider: Web3.Provider;
+}
+
+export interface PortDeployerOptions extends BaseDeployerOptions {
+    jsonrpcPort: number;
+}
+
+export type DeployerOptions = PortDeployerOptions | ProviderDeployerOptions;
 
 export interface ContractSources {
     [key: string]: string;

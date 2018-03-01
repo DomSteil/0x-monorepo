@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v0.6.0 - _TBD, 2018_
+
+    * Add coverage subprovider (#TBD)
+
 ## v0.5.0 - _February 16, 2018_
 
     * Add EmptyWalletSubprovider and FakeGasEstimateSubprovider (#392)

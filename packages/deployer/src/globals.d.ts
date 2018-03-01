@@ -1,8 +1,9 @@
 declare module 'solc' {
-    // tslint:disable:completed-docs
-    export function compile(sources: any, optimizerEnabled: number, findImports: (importPath: string) => any): any;
-    export function setupMethods(solcBin: any): any;
-    // tslint:enable:completed-docs
+    export interface SolcInstance {
+        compile(sources: any, optimizerEnabled: number, findImports: (importPath: string) => any): any; // TODO
+    }
+    export function loadRemoteVersion(versionName: string, cb: (err: Error | null, res?: SolcInstance) => void): void;
+    export function setupMethods(solcBin: any): SolcInstance;
 }
 
 declare module 'web3-eth-abi' {
